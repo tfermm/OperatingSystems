@@ -31,7 +31,7 @@ void main(){
 	int fds1[2];
 	int fds2[2];
 	int info[2];
-	int max_forks = 2;
+	int max_forks = 8;
 	int max_trapizoids = 64;
 	int type;
 	float sum=0;
@@ -69,7 +69,6 @@ void main(){
 			if (shared_data->ready == 3){
 				exit(0);
 			}
-			printf("Thred1: %d\n", k);
 			if (k == 64){
 				exit(0);
 			}
@@ -91,7 +90,6 @@ void main(){
 				exit(0);
 			}
 			sscanf(buff,"%d %f %d",&type, &value, &is_done);
-			printf("Thread1:\n\ttype: %d\n\tvalue: %f\n",type,value);
 			switch(type){
 				case 0:
 					ans = f(value);
@@ -127,7 +125,342 @@ void main(){
 				if (shared_data->ready == 3){
 					exit(0);
 				}
-				printf("Thred2: %d\n");
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>2){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>3){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>4){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>5){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>6){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				int type;
+				float ans;
+				close(fds1[writing]);
+
+
+				while(shared_data->ready){
+					shared_data->ready = 0;
+					while(read(fds1[reading], buff, sizeof(string))==-1){
+						if (shared_data->ready == 3){
+							exit(0);
+						}
+					}
+				}
+				if (shared_data->ready == 3){
+					exit(0);
+				}
+				sscanf(buff,"%d %f %d",&type, &value, &is_done);
+				switch(type){
+					case 0:
+						ans = f(value);
+						break;
+					case 1:
+						ans = 2.0 * f(value);
+						break;
+				}
+
+				memset(string, '\0', sizeof(string));
+
+				if (!is_done){
+					sprintf(string, "%f\0", ans);
+					close(fds2[reading]);
+					write(fds2[writing], string, sizeof(string));
+				}
+				else{
+					if(shmdt(shared_mem) == -1) exit (EXIT_FAILURE);
+					exit(EXIT_SUCCESS);
+					break;
+				}
+			}
+		}
+	}
+	else if(fork()==0){
+		if (max_forks>7){
+			// shaired memory
+			shared_mem = shmat(shmid,(void*) 0,0);
+			if(shared_mem == (void*) -1) exit (EXIT_FAILURE);
+			struct shared* shared_data = (struct shared*) shared_mem;
+			while (shared_data->ready != 4){
+				sleep(0.1);
+			}
+			sleep(0.5);
+			while (1){	
+				k++;
+				if (shared_data->ready == 3){
+					exit(0);
+				}
 				int type;
 				float ans;
 				close(fds1[writing]);
@@ -170,7 +503,6 @@ void main(){
 		}
 	}
 	else{
-printf("parent\n");
 		count = &i;
 	// shaired memory
 		shared_mem = shmat(shmid,(void*) 0,0);
@@ -194,7 +526,6 @@ printf("parent\n");
 			}
 
 			sprintf(string, "%d %f %d\0", type, ((i*1.0)*delta_x), is_done);
-			printf("parrent string: %s\n", string);
 			close(fds1[reading]);
 			shared_data->ready = 1;
 			write(fds1[writing], string, sizeof(string));
@@ -206,9 +537,6 @@ printf("parent\n");
 					sum += temp;
 				}
 			}
-			printf("returned value: %s\n", buff);
-			printf("current sum: %f\n", sum);
-			printf("i: %d\n", i);
 			if(is_done){
 				finished = 1;
 				shared_data->ready = 3;
