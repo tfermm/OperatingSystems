@@ -45,7 +45,7 @@ void main(){
 	int max_forks = 1;
 	int max_trapizoids = 64;
 	int type;
-	float sum;
+	float sum=0;
 	float temp;
 	float delta_x;
 	int upper_limit = 2;
@@ -131,9 +131,6 @@ void main(){
 		}
 	}
 	else{
-			printf("%d\n",fds1[0]);
-			printf("%d\n",fds1[1]);
-
 		for (i = 0; i < max_trapizoids; i++){
 			printf("parent\n");
 			if (i == 0 || i == max_trapizoids-1){
@@ -156,6 +153,7 @@ void main(){
 			if (!finished){
 				sum += temp;
 			}
+			printf("current sum:%f\n", sum);
 			if(is_done){
 				finished = 1;
 			}
