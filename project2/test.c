@@ -8,34 +8,6 @@
 float f(float x){
 	return (1.0/(1.0+x));
 }
-float gimme_float(int x){
-	return (x*1.0);
-}
-/*
-int fds1[2];
-int fds2[2];
-int info[2];
-
-char string[20] = {0};
-
-char buff[1024] = {0};
-*/
-
-/*
-void do_work(){
-	if (fork()==0){
-		printf("child\n");
-		close(fds1[writing]);
-		printf("Child Test: %d\n",read(fds1[reading], buff, sizeof(string)));
-		while(read(fds1[reading], buff, sizeof(string))==-1){}
-		printf("child: %s\n", buff);
-		sscanf(buff,"%s",&string);
-		sleep(1);	
-		close(fds2[reading]);
-		write(fds2[writing], string, sizeof(string));
-	}
-}
-*/
 
 void main(){
 	int i;
@@ -75,7 +47,6 @@ void main(){
 					close(fds1[writing]);
 					read(fds1[reading], buff, sizeof(string));
 					sscanf(buff,"%d %f %d",&type, &value, &is_done);
-					printf("child: type: %d, value: %f\n", type, value);
 					switch(type){
 						case 0:
 							ans = f(value);
@@ -86,7 +57,6 @@ void main(){
 					}
 					memset(string, '\0', sizeof(string));
 					if (!is_done){
-						printf("Child answer: %f\n", ans);
 						sprintf(string, "%f\0", ans);
 						close(fds2[reading]);
 						write(fds2[writing], string, sizeof(string));
@@ -108,7 +78,6 @@ void main(){
 				close(fds1[writing]);
 				read(fds1[reading], buff, sizeof(string));
 				sscanf(buff,"%d %f %d",&type, &value, &is_done);
-				printf("child: type: %d, value: %f\n", type, value);
 				switch(type){
 					case 0:
 						ans = f(value);
@@ -119,7 +88,6 @@ void main(){
 				}
 				memset(string, '\0', sizeof(string));
 				if (!is_done){
-					printf("Child answer: %f\n", ans);
 					sprintf(string, "%f\0", ans);
 					close(fds2[reading]);
 					write(fds2[writing], string, sizeof(string));
@@ -132,7 +100,6 @@ void main(){
 	}
 	else{
 		for (i = 0; i < max_trapizoids; i++){
-			printf("parent\n");
 			if (i == 0 || i == max_trapizoids-1){
 				type = 0;
 			}
@@ -148,12 +115,10 @@ void main(){
 
 			close(fds2[writing]);
 			while(read(fds2[reading], buff, sizeof(string))==-1){}
-			printf("Parent read: %s\n", buff);	
 			sscanf(buff,"%f",&temp);
 			if (!finished){
 				sum += temp;
 			}
-			printf("current sum:%f\n", sum);
 			if(is_done){
 				finished = 1;
 			}
